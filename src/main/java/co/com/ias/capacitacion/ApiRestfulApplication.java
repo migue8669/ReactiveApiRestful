@@ -29,7 +29,7 @@ public class ApiRestfulApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
+/*
 		reactiveMongoTemplate.dropCollection("productos").subscribe();
 		reactiveMongoTemplate.dropCollection("categorias").subscribe();
 
@@ -43,15 +43,14 @@ public class ApiRestfulApplication implements CommandLineRunner {
 				.doOnNext(c ->{
 					log.info("Categoria creada: " + c.getNombre() + ", Id: " + c.getId());
 				}).thenMany(
-				Flux.just(new Producto("TV Panasonic Pantalla LCD", null,456.89, electronico),
-						new Producto("Sony Camara HD Digital", null,177.89, electronico),
-						new Producto("Apple iPod",null, 46.89, electronico),
-						new Producto("Sony Notebook",null, 846.89, computacion),
-						new Producto("Hewlett Packard Multifuncional", null,200.89, computacion),
-						new Producto("Bianchi Bicicleta", null,70.89, deporte),
-						new Producto("HP Notebook Omen 17", null,2500.89, computacion),
-						new Producto("Mica Cómoda 5 Cajones", null,150.89, muebles),
-						new Producto("TV Sony Bravia OLED 4K Ultra HD", null, 2255.89, electronico)
+				Flux.just(new Producto("TV Panasonic Pantalla LCD",456.89, electronico),
+						new Producto("Sony Camara HD Digital",177.89, electronico),
+						new Producto("Apple iPod", 46.89, electronico),
+						new Producto("Sony Notebook", 846.89, computacion),
+						new Producto("Hewlett Packard Multifuncional",200.89, computacion),
+						new Producto("HP Notebook Omen 17",2500.89, computacion),
+						new Producto("Mica Cómoda 5 Cajones",150.89, muebles),
+						new Producto("TV Sony Bravia OLED 4K Ultra HD", 2255.89, electronico)
 				)
 						.flatMap(producto -> {
 							producto.setCreateAt(new Date());
@@ -60,5 +59,7 @@ public class ApiRestfulApplication implements CommandLineRunner {
 		)
 				.subscribe(producto -> log.info("Insert: " + producto.getId() + " " + producto.getNombre()));
 
+
+ */
 	}
 }

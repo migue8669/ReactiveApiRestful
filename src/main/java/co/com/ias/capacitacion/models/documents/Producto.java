@@ -33,13 +33,15 @@ private Double precio;
 
 
 
-    public Producto(String nombre, Double precio, String categoría, String foto) {
+    public Producto() {}
+
+    public Producto(String nombre, Double precio) {
         this.nombre = nombre;
         this.precio = precio;
-        this.foto=foto;
     }
-    public Producto(String nombre,String foto, Double precio, Categoria categoria) {
-        this(nombre,precio, categoria);
+
+    public Producto(String nombre, Double precio, Categoria categoria) {
+        this(nombre, precio);
         this.categoria = categoria;
     }
 
@@ -51,9 +53,7 @@ private Double precio;
         this.categoria = categoria;
     }
 
-    public Producto(String value, double v, Categoria categoria){
-        super();
-    }
+
 
     public String getId() {
         return id;

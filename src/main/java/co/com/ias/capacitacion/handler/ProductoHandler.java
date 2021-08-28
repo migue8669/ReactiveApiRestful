@@ -74,33 +74,35 @@ public class ProductoHandler {
     public Mono<ServerResponse> crear(ServerRequest request) {
         Mono<Producto> productoMono = request.bodyToMono(Producto.class);
         return productoMono.flatMap(p -> {
-            Errors errors= new BeanPropertyBindingResult(p,Producto.class.getName());
-            validator.validate(p,errors);
-if(errors.hasErrors()){
-    return Flux.fromIterable(errors.getFieldErrors()).map(fieldError -> "El campo "+fieldError.getField()+" "+fieldError.getDefaultMessage())
-            .collectList().flatMap(list->ServerResponse.badRequest().body(fromObject(list)));
-}else{
-            if (p.getCreateAt() == null) {
+            Errors errors = new BeanPropertyBindingResult(p, Producto.class.getName());
+            validator.validate(p, errors);
+            if (errors.hasErrors()) {
+                return Flux.fromIterable(errors.getFieldErrors()).map(fieldError -> "El campo " + fieldError.getField() + " " + fieldError.getDefaultMessage())
+                        .collectList().flatMap(list -> ServerResponse.badRequest().body(fromObject(list)));
+            } else {
+                if (p.getCreateAt() == null) {
 
 
-                p.setCreateAt(new Date());
+                    p.setCreateAt(new Date());
+                }
+                return productoService.save(p).flatMap(pbd -> ServerResponse.created(URI.create("/api/v2/productos"
+                        .concat(pbd.getId()))).contentType(MediaType.APPLICATION_JSON)
+                        .body(fromObject(p)));
             }
-            return productoService.save(p).flatMap(pbd -> ServerResponse.created(URI.create("/api/v2/productos"
-                .concat(pbd.getId()))).contentType(MediaType.APPLICATION_JSON)
-                .body(fromObject(p)));
+
+        });
     }
 
-        });}
     public Mono<ServerResponse> crearConFoto(ServerRequest request) {
-        Mono<Producto> productoMono = request.multipartData().map(multipart->{
-            FormFieldPart nombre=(FormFieldPart) multipart.toSingleValueMap().get("nombre");
-            FormFieldPart precio=(FormFieldPart) multipart.toSingleValueMap().get("categoria");
-            FormFieldPart categoriaId=(FormFieldPart) multipart.toSingleValueMap().get("categoriaId");
-            FormFieldPart categoriaNombre=(FormFieldPart) multipart.toSingleValueMap().get("categoriaNombre");
+        Mono<Producto> productoMono = request.multipartData().map(multipart -> {
+            FormFieldPart nombre = (FormFieldPart) multipart.toSingleValueMap().get("nombre");
+            FormFieldPart precio = (FormFieldPart) multipart.toSingleValueMap().get("categoria");
+            FormFieldPart categoriaId = (FormFieldPart) multipart.toSingleValueMap().get("categoriaId");
+            FormFieldPart categoriaNombre = (FormFieldPart) multipart.toSingleValueMap().get("categoriaNombre");
 
             Categoria categoria = new Categoria(categoriaNombre.value());
             categoria.setId(categoriaId.value());
-            return new Producto(nombre.value(),Double.parseDouble(precio.value()),categoria);
+            return new Producto(nombre.value(), Double.parseDouble(precio.value()), categoria);
         });
         return request.multipartData().map(multipart -> multipart.toSingleValueMap().get("file"))
                 .cast(FilePart.class)
@@ -116,6 +118,7 @@ if(errors.hasErrors()){
                 .switchIfEmpty(ServerResponse.notFound().build());
 
     }
+
     public Mono<ServerResponse> editar(ServerRequest request) {
         Mono<Producto> productoMono = request.bodyToMono(Producto.class);
 
